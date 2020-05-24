@@ -1,3 +1,97 @@
+#!/usr/bin/env bash
+
+function configuration(){
+
+  shopt -s lastpipe;
+  conf_cache_dir=~/.ultra-library-cache
+  trimmed_directory="$conf_cache_dir/trimmed";
+  meta_directory="$conf_cache_dir/metadata";
+  tempo_directory="$conf_cache_dir/alteredbpm";
+  
+}
+
+
+function ensure(){
+
+  mkdir -p $conf_cache_dir;
+  mkdir -p $trimmed_directory;
+  mkdir -p $meta_directory;
+  mkdir -p $tempo_directory;
+
+}
+
+
+function playlist_creator(){
+  (sed -e 's/#.*$//' -e '/^$/d' -e 's/[[:space:]]*$//' $1) | readarray -t playlist;
+}
+
+
+function tempo_song(){
+
+  original=$1;
+  remastered=$2;
+  oldbpm=$3;
+  newbpm=$4;
+
+  echo original: $original;
+  echo remastered: $remastered;
+  echo oldbpm: $oldbpm;
+  echo newbpm: $newbpm;
+
+  if [ -f "$remastered" ] && [ "$remastered" -nt "$original" ]; then
+    # remastered exists, and is newer than original, nothing to do;
+    # echo up to date: "$remastered"
+    echo -ne "";
+  elif [ -n "$oldbpm" ] && [ -n "$newbpm" ]; then
+
+    echo adjusting tempo from $oldbpm $newbpm;
+
+    
+
+  else
+    echo ERROR: missing arguments
+    echo oldbpm: $oldbpm;
+    echo newbpm: $newbpm;
+    exit 1;
+  fi
+
+}
+
+
+function trim_song(){
+
+  original=$1;
+  remastered=$2;
+  start=$3;
+  end=$4;
+
+  # echo original: $original;
+  # echo remastered: $remastered;
+  # echo start: $start;
+  # echo end: $end;
+
+  if [ -f "$remastered" ] && [ "$remastered" -nt "$original" ]; then
+
+    # remastered exists, and is newer than original, nothing to do;
+    # echo up to date: "$remastered"
+    echo -ne "";
+
+
+  elif [ -n "$start" ] && [ -n "$end" ]; then
+    echo Trimming start and end: $start $end
+    ffmpeg -hide_banner -loglevel panic -y -i $original -ss $start -to $end $remastered;
+  elif [ -n "$start" ]; then
+    echo Trimming start: $start
+    ffmpeg -hide_banner -loglevel panic -y -i $original -ss $start $remastered;
+  elif [ -n "$end" ]; then
+    echo Trimming end: $end
+    ffmpeg -hide_banner -loglevel panic -y -i $original -to $end $remastered;
+  else
+    cp $original $remastered;
+  fi
+
+}
+
 
 configuration;
 ensure;

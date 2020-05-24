@@ -3,7 +3,9 @@
 echo "#!/usr/bin/env bash" > ./ultra;
 chmod +x ./ultra;
 for filename in src/*.bash; do
-  echo "source ./$filename;" >> ./ultra;
+  echo >> ./ultra;
+  cat $filename >> ./ultra;
+  echo >> ./ultra;
 done;
 
 cat ./index.sh >> ./ultra;

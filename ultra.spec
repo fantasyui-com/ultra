@@ -6,7 +6,7 @@ Summary: Gradually increment play-list tempo.
 License: GNU GENERAL PUBLIC LICENSE
 Source0: ultra
 BuildArch: noarch
-Requires: ffmpeg,md5sum
+Requires: ffmpeg,md5sum,shuf
 
 %description
 A utility for improving jogging (physical activity) speed.
