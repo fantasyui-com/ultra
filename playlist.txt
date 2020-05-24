@@ -1,0 +1,4 @@
+# Test File
+
+~/my-music/chonks.ogg 200 # I wish I never created this song...
+~/my-music/boink.mp3 150 10 1:30 # Wow, I like this one.

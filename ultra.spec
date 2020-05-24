@@ -3,10 +3,10 @@ Version: 1
 Release: 1%{?dist}
 Summary: Gradually increment play-list tempo.
 
-License: Public Domain
+License: GNU GENERAL PUBLIC LICENSE
 Source0: ultra
 BuildArch: noarch
-Requires: ffmpeg
+Requires: ffmpeg,md5sum
 
 %description
 A utility for improving jogging (physical activity) speed.
