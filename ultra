@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+source ./src/tempo.bash
+source ./src/playlist.bash
