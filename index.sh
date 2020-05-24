@@ -19,8 +19,8 @@ if [ ! -d "$output_dir" ]; then
   exit 1;
 else
   if [ $(ls -A "$output_dir" | wc -l) -ne 0 ]; then
-    echo ERROR: $output_dir directory not empty;
-    exit 1;
+    echo WARN: $output_dir directory not empty;
+    #exit 1;
   fi
 fi;
 
@@ -36,8 +36,13 @@ for entry in "${playlist[@]}"; do
 
       song_id=${song[0]};
 
-      echo;
+      if [ ! -f "$song_id" ]; then
+        echo ERROR: Playlist item $song_id does not exist.
+        exit 1;
+      fi;
+
       echo $song_id ---------------------------------- ;
+
 
       song_location=$(eval echo $song_id);
       song_bpm=${song[1]};
