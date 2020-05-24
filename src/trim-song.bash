@@ -13,7 +13,8 @@ function trim_song(){
   if [ -f "$remastered" ] && [ "$remastered" -nt "$original" ]; then
 
     # remastered exists, and is newer than original, nothing to do;
-    echo up to date: "$remastered"
+    # echo up to date: "$remastered"
+    echo -ne "";
 
 
   elif [ -n "$start" ] && [ -n "$end" ]; then

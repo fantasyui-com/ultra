@@ -6,7 +6,7 @@ source ./src/configuration.bash
 source ./src/ensure.bash
 
 source ./src/trim-song.bash
-source ./src/transform.bash
+source ./src/tempo-song.bash
 
 source ./src/playlist.bash
 
@@ -22,9 +22,19 @@ output_dir=$4;
 # echo upper_bpm: $upper_bpm;
 # echo output_dir: $output_dir;
 
+if [ ! -d "$output_dir" ]; then
+  echo ERROR: $output_dir not a directory;
+  exit 1;
+else
+  if [ $(ls -A "$output_dir" | wc -l) -ne 0 ]; then
+    echo ERROR: $output_dir directory not empty;
+    exit 1;
+  fi
+fi;
+
 playlist_creator $playlist_file;
 
-printf '%s\n' "${playlist[@]}"
+# printf '%s\n' "${playlist[@]}"
 
 for entry in "${playlist[@]}"; do
 
@@ -48,12 +58,17 @@ for entry in "${playlist[@]}"; do
       file_name="${file_basename%.*}"
       file_md5=$(md5sum $song_location | awk '{print $1}');
       file_newname="${file_md5}.${file_extname}";
-      file_location="$trimmed_directory/$file_newname";
+      trimmed_location="$trimmed_directory/$file_newname";
 
       file_metaname="${file_md5}.txt";
       meta_location="$meta_directory/$file_metaname";
       entry_stamp=$(echo $entry | md5sum | awk '{print $1}');
       last_stamp=$(touch "$meta_location"; cat "$meta_location" | head -n 1 | md5sum | awk '{print $1}');
+
+      new_bpm=$upper_bpm;
+
+      tempo_location="$tempo_directory/$new_bpm/$file_metaname";
+      mkdir -p $tempo_location;
 
       # echo song_id: $song_id;
       # echo song_location: $song_location;
@@ -67,14 +82,18 @@ for entry in "${playlist[@]}"; do
       # echo file_name: $file_name;
       # echo file_md5: $file_md5;
       # echo file_newname: $file_newname;
-      # echo file_location: $file_location;
+      # echo trimmed_location: $trimmed_location;
       #
       # echo entry_stamp: $entry_stamp;
       # echo last_stamp: $last_stamp;
 
       ## BEGIN FUNCTIONS
 
-      trim_song $song_location $file_location $song_start $song_end;
+      trim_song $song_location $trimmed_location $song_start $song_end;
+      tempo_song $song_location $tempo_location $song_bpm $new_bpm;
+
+      # at this point, copy $tempo_location into the playlist
+      # cp $tempo_location output_dir/
 
       ## END FUNCTIONS
 
