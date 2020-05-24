@@ -50,6 +50,7 @@ for entry in "${playlist[@]}"; do
       file_name="${file_basename%.*}"
       file_md5=$(md5sum $song_location | awk '{print $1}');
       file_newname="${file_md5}.${file_extname}";
+      file_mp3name="${file_md5}.mp3";
       trimmed_location="$trimmed_directory/$file_newname";
 
       file_metaname="${file_md5}.txt";
@@ -59,8 +60,9 @@ for entry in "${playlist[@]}"; do
 
       new_bpm=$(shuf -i $lower_bpm-$upper_bpm -n 1)
 
-      tempo_location="$tempo_directory/$new_bpm/$file_metaname";
-      mkdir -p $tempo_location;
+      tempo_bpmlocation="$tempo_directory/$new_bpm";
+      mkdir -p $tempo_bpmlocation;
+      tempo_location="$tempo_directory/$new_bpm/$file_mp3name";
 
       # echo song_id: $song_id;
       # echo song_location: $song_location;
@@ -85,7 +87,7 @@ for entry in "${playlist[@]}"; do
       tempo_song $song_location $tempo_location $song_bpm $new_bpm;
 
       # at this point, copy $tempo_location into the playlist
-      # cp $tempo_location output_dir/
+      cp $tempo_location $output_dir/
 
       ## END FUNCTIONS
 

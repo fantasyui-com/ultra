@@ -5,10 +5,10 @@ function tempo_song(){
   oldbpm=$3;
   newbpm=$4;
 
-  echo original: $original;
-  echo remastered: $remastered;
-  echo oldbpm: $oldbpm;
-  echo newbpm: $newbpm;
+  # echo original: $original;
+  # echo remastered: $remastered;
+  # echo oldbpm: $oldbpm;
+  # echo newbpm: $newbpm;
 
   if [ -f "$remastered" ] && [ "$remastered" -nt "$original" ]; then
     # remastered exists, and is newer than original, nothing to do;
@@ -16,9 +16,10 @@ function tempo_song(){
     echo -ne "";
   elif [ -n "$oldbpm" ] && [ -n "$newbpm" ]; then
 
-    echo adjusting tempo from $oldbpm $newbpm;
-
-    
+    adjust=$(echo "scale=2; ( ($newbpm-$oldbpm)/$oldbpm )+1" | bc);
+    echo "Adjusting tempo from $oldbpm to $newbpm (by $adjust)";
+    ffmpeg -hide_banner -loglevel panic -y -i $original -af atempo=$adjust $remastered;
+    ## ffmpeg -y -i $original -af atempo=$adjust $remastered;
 
   else
     echo ERROR: missing arguments
