@@ -1,14 +1,6 @@
-#!/usr/bin/env bash
 
-shopt -s lastpipe;
-
-source ./src/configuration.bash
-source ./src/ensure.bash
-
-source ./src/trim-song.bash
-source ./src/tempo-song.bash
-
-source ./src/playlist.bash
+configuration;
+ensure;
 
 # echo conf_cache_dir: $conf_cache_dir;
 
